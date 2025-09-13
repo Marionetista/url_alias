@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../common/constants/app_colors.dart';
 import '../../../../common/constants/design_tokens.dart';
+import '../../../../common/constants/messages.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   const AppBarWidget({super.key});
@@ -11,7 +12,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     automaticallyImplyLeading: false,
     backgroundColor: AppColors.pinky,
     title: Text(
-      'Aliases',
+      AppMessages.aliases,
       style: TextStyle(
         color: AppColors.whitePinky,
         fontWeight: FontWeight.bold,

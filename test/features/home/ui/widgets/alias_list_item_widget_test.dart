@@ -31,7 +31,7 @@ void main() {
 
       expect(find.text('Original: https://www.example.com'), findsOneWidget);
 
-      expect(find.text('Short:\nhttps://short.ly/123456789'), findsOneWidget);
+      expect(find.text('Short:https://short.ly/123456789'), findsOneWidget);
 
       expect(find.byIcon(Icons.copy), findsOneWidget);
     });
@@ -50,7 +50,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Verify SnackBar is shown
-        expect(find.text('Short URL copied to clipboard!'), findsOneWidget);
+        expect(find.text('Short URL copied to clipboard'), findsOneWidget);
       },
     );
   });

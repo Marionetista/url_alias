@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../../../common/constants/app_colors.dart';
 import '../../../../common/constants/design_tokens.dart';
+import '../../../../common/constants/messages.dart';
 import '../../../../common/models/url_alias_model.dart';
 
 class AliasListItem extends StatelessWidget {
@@ -20,7 +22,7 @@ class AliasListItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Alias: ${alias.alias}',
+                  AppMessages.alias(alias.alias),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: DesignTokens.sizeL,
@@ -32,7 +34,7 @@ class AliasListItem extends StatelessWidget {
                   Clipboard.setData(ClipboardData(text: alias.short));
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Short URL copied to clipboard!'),
+                      content: Text(AppMessages.shortUrlCopiedToClipboard),
                     ),
                   );
                 },
@@ -42,13 +44,13 @@ class AliasListItem extends StatelessWidget {
           ),
           const SizedBox(height: DesignTokens.sizeS),
           Text(
-            'Original: ${alias.self}',
+            AppMessages.original(alias.self),
             style: const TextStyle(fontSize: DesignTokens.sizeM),
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: DesignTokens.sizeXS),
           Text(
-            'Short:\n${alias.short}',
+            AppMessages.short(alias.short),
             style: TextStyle(
               fontSize: DesignTokens.sizeM,
               color: AppColors.black,
