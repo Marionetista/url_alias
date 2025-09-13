@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -21,15 +22,14 @@ void main() {
     tearDown(() => cubit.close());
 
     test(
-      'When HomeCubit is created '
-      'should emit HomeInitial',
+      'When HomeCubit is created should emit HomeInitial',
       () => expect(cubit.state, isA<HomeInitial>()),
     );
 
-    test(
-      'When call createAlias with valid URL should emit HomeSuccess',
-      () async {
-        // Arrange
+    blocTest<HomeCubit, HomeState>(
+      'When call createAlias with valid URL should emit Loading then Success',
+      build: () => cubit,
+      act: (cubit) async {
         const url = 'https://www.example.com';
         const alias = UrlAliasModel(
           alias: '123456789',
@@ -41,34 +41,42 @@ void main() {
           () => mockRepository.createAlias(url),
         ).thenAnswer((_) async => alias);
 
-        // Act
         await cubit.createAlias(url);
-
-        // Assert
-        expect(cubit.state, isA<HomeSuccess>());
-        final successState = cubit.state as HomeSuccess;
-        expect(successState.aliases.length, 1);
-        expect(successState.aliases.first.alias, '123456789');
       },
+      expect: () => [
+        isA<HomeLoading>(),
+        isA<HomeSuccess>()
+            .having((state) => state.aliases.length, 'aliases length', 1)
+            .having(
+              (state) => state.aliases.first.alias,
+              'first alias',
+              '123456789',
+            ),
+      ],
     );
 
-    test('When call createAlias with error should emit HomeError', () async {
-      // Arrange
-      const url = 'https://www.example.com';
-      const errorMessage = 'Network error';
+    blocTest<HomeCubit, HomeState>(
+      'When call createAlias with error should emit Loading then Error',
+      build: () => cubit,
+      act: (cubit) async {
+        const url = 'https://www.example.com';
+        const errorMessage = 'Network error';
 
-      when(
-        () => mockRepository.createAlias(url),
-      ).thenThrow(Exception(errorMessage));
+        when(
+          () => mockRepository.createAlias(url),
+        ).thenThrow(Exception(errorMessage));
 
-      // Act
-      await cubit.createAlias(url);
-
-      // Assert
-      expect(cubit.state, isA<HomeError>());
-      final errorState = cubit.state as HomeError;
-      expect(errorState.message, contains(errorMessage));
-    });
+        await cubit.createAlias(url);
+      },
+      expect: () => [
+        isA<HomeLoading>(),
+        isA<HomeError>().having(
+          (state) => state.message,
+          'error message',
+          contains('Network error'),
+        ),
+      ],
+    );
 
     test('When access aliases getter should return unmodifiable list', () {
       // Act
@@ -102,5 +110,49 @@ void main() {
       expect(state.retrievedUrl, retrievedUrl);
       expect(state.alias, alias);
     });
+
+    blocTest<HomeCubit, HomeState>(
+      'When repository throws SocketException should emit proper error',
+      build: () => cubit,
+      act: (cubit) async {
+        const url = 'https://www.example.com';
+
+        when(
+          () => mockRepository.createAlias(url),
+        ).thenThrow(Exception('No internet connection'));
+
+        await cubit.createAlias(url);
+      },
+      expect: () => [
+        isA<HomeLoading>(),
+        isA<HomeError>().having(
+          (state) => state.message,
+          'error message',
+          contains('No internet connection'),
+        ),
+      ],
+    );
+
+    blocTest<HomeCubit, HomeState>(
+      'When repository throws HttpException should emit proper error',
+      build: () => cubit,
+      act: (cubit) async {
+        const url = 'https://www.example.com';
+
+        when(
+          () => mockRepository.createAlias(url),
+        ).thenThrow(Exception('HTTP error occurred'));
+
+        await cubit.createAlias(url);
+      },
+      expect: () => [
+        isA<HomeLoading>(),
+        isA<HomeError>().having(
+          (state) => state.message,
+          'error message',
+          contains('HTTP error occurred'),
+        ),
+      ],
+    );
   });
 }
