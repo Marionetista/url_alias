@@ -23,6 +23,7 @@ class HomeRepository {
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+
         return UrlAliasModel.fromJson(jsonData);
       } else {
         throw Exception(
