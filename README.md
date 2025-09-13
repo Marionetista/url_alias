@@ -27,9 +27,6 @@ Viewmodel is between two layers because it's the glue between Presentation and D
 ## Run app
 flutter run
 
-## Run Tests
-flutter test
-
 ## Testing
 
 Our test coverage is a mixing between unit and widget testing.
