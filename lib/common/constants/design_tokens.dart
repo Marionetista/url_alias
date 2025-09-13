@@ -1,4 +1,6 @@
 class DesignTokens {
+  static const sizeXS = 4.0;
+  static const sizeS = 8.0;
   static const sizeSM = 12.0;
   static const sizeM = 14.0;
   static const sizeL = 16.0;
@@ -11,5 +13,5 @@ class DesignTokens {
   static const fontSM = 14.0;
   static const fontMD = 16.0;
   static const fontLG = 18.0;
-  static const fonstXL = 20.0;
+  static const fontXL = 20.0;
 }

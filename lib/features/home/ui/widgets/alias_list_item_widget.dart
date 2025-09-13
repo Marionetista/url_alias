@@ -1,0 +1,63 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../../../../common/constants/app_colors.dart';
+import '../../../../common/constants/design_tokens.dart';
+import '../../../../common/models/url_alias_model.dart';
+
+class AliasListItem extends StatelessWidget {
+  const AliasListItem({required this.alias, super.key});
+  final UrlAliasModel alias;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    margin: const EdgeInsets.only(bottom: DesignTokens.sizeS),
+    child: Padding(
+      padding: const EdgeInsets.all(DesignTokens.sizeL),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Alias: ${alias.alias}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: DesignTokens.sizeL,
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: alias.short));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Short URL copied to clipboard!'),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.copy),
+              ),
+            ],
+          ),
+          const SizedBox(height: DesignTokens.sizeS),
+          Text(
+            'Original: ${alias.self}',
+            style: const TextStyle(fontSize: DesignTokens.sizeM),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: DesignTokens.sizeXS),
+          Text(
+            'Short:\n${alias.short}',
+            style: TextStyle(
+              fontSize: DesignTokens.sizeM,
+              color: AppColors.black,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: DesignTokens.sizeS),
+        ],
+      ),
+    ),
+  );
+}
