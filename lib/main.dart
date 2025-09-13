@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app.dart';
-import 'common/observers/app_bloc_observer.dart';
+import 'app_bloc_observer.dart';
 
 void main() {
   EquatableConfig.stringify = true;
