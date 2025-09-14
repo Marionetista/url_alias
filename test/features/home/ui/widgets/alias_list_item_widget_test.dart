@@ -42,14 +42,12 @@ void main() {
         await createWidget(tester);
         await tester.pumpAndSettle();
 
-        // Find and tap the copy button
         final copyButton = find.byIcon(Icons.copy);
         expect(copyButton, findsOneWidget);
 
         await tester.tap(copyButton);
         await tester.pumpAndSettle();
 
-        // Verify SnackBar is shown
         expect(find.text('Short URL copied to clipboard'), findsOneWidget);
       },
     );

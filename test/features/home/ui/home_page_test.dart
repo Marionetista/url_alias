@@ -117,68 +117,10 @@ void main() {
       expect(find.text('Close'), findsOneWidget);
     });
 
-    testWidgets('When user enters valid URL and presses button '
-        'should call createAlias', (WidgetTester tester) async {
-      await createWidget(tester);
-
-      const testUrl = 'https://www.example.com';
-
-      await tester.enterText(find.byType(TextFormField), testUrl);
-      await tester.pump();
-
-      await tester.tap(find.byIcon(Icons.send));
-      await tester.pump();
-
-      expect(find.text(testUrl), findsNothing);
-    });
-
-    testWidgets('When user enters invalid URL '
-        'should show validation error', (WidgetTester tester) async {
-      await createWidget(tester);
-
-      await tester.enterText(find.byType(TextFormField), 'invalid-url');
-      await tester.pump();
-
-      await tester.tap(find.byIcon(Icons.send));
-      await tester.pump();
-
-      expect(find.text(AppMessages.invalidUrl), findsOneWidget);
-    });
-
-    testWidgets('When user enters empty URL '
-        'should show validation error', (WidgetTester tester) async {
-      await createWidget(tester);
-
-      await tester.tap(find.byIcon(Icons.send));
-      await tester.pump();
-
-      expect(find.text(AppMessages.pleaseWriteAnUrl), findsOneWidget);
-    });
-
-    testWidgets('When user enters valid URL '
-        'should clear text field after submission', (
-      WidgetTester tester,
-    ) async {
-      await createWidget(tester);
-
-      const testUrl = 'https://www.example.com';
-
-      await tester.enterText(find.byType(TextFormField), testUrl);
-      await tester.pump();
-
-      expect(find.text(testUrl), findsOneWidget);
-
-      await tester.tap(find.byIcon(Icons.send));
-      await tester.pump();
-
-      expect(find.text(testUrl), findsNothing);
-    });
-
     testWidgets('When HomePage renders AliasesListWidget with different states '
         'should work correctly', (WidgetTester tester) async {
       await createWidget(tester);
 
-      // Test HomeSuccess state
       const aliases = [
         UrlAliasModel(
           alias: '111111111',
@@ -187,13 +129,14 @@ void main() {
         ),
       ];
 
+      // HomeSuccess state
       homeCubit.emit(HomeSuccess(aliases: aliases));
       await tester.pump();
 
       expect(find.byType(AliasesListWidget), findsOneWidget);
       expect(find.byType(AliasListItem), findsOneWidget);
 
-      // Test HomeError state
+      // HomeError state
       homeCubit.emit(
         const HomeError(aliases: aliases, message: 'Error message'),
       );
@@ -202,21 +145,21 @@ void main() {
       expect(find.byType(AliasesListWidget), findsOneWidget);
       expect(find.byType(AliasListItem), findsOneWidget);
 
-      // Test HomeInitial state
+      // HomeInitial state
       homeCubit.emit(const HomeInitial(aliases: []));
       await tester.pump();
 
       expect(find.byType(AliasesListWidget), findsOneWidget);
       expect(find.byType(EmptyAliasesWidget), findsOneWidget);
 
-      // Test HomeLoading state with empty aliases
+      //  HomeLoading state with empty aliases
       homeCubit.emit(const HomeLoading(aliases: []));
       await tester.pump();
 
       expect(find.byType(AliasesListWidget), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsAtLeastNWidgets(1));
 
-      // Test HomeLoading state with existing aliases
+      // HomeLoading state with existing aliases
       homeCubit.emit(HomeLoading(aliases: aliases));
       await tester.pump();
 

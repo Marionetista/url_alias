@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../common/constants/app_colors.dart';
-import '../../../../common/constants/design_tokens.dart';
-import '../../../../common/constants/messages.dart';
+import '../../../../common/constants/ui_tools.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   const AppBarWidget({super.key});

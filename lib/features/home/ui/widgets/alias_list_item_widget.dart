@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../common/constants/app_colors.dart';
-import '../../../../common/constants/design_tokens.dart';
-import '../../../../common/constants/messages.dart';
+import '../../../../common/constants/ui_tools.dart';
 import '../../../../common/models/url_alias_model.dart';
 
 class AliasListItem extends StatelessWidget {
@@ -45,17 +43,17 @@ class AliasListItem extends StatelessWidget {
           const SizedBox(height: DesignTokens.sizeS),
           Text(
             AppMessages.original(alias.self),
-            style: const TextStyle(fontSize: DesignTokens.sizeM),
             overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: DesignTokens.sizeM),
           ),
           const SizedBox(height: DesignTokens.sizeXS),
           Text(
             AppMessages.short(alias.short),
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: DesignTokens.sizeM,
               color: AppColors.black,
             ),
-            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: DesignTokens.sizeS),
         ],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:url_alias/common/constants/app_colors.dart';
-import 'package:url_alias/common/constants/design_tokens.dart';
+import 'package:url_alias/common/constants/ui_tools.dart';
 import 'package:url_alias/features/home/ui/widgets/app_bar_widget.dart';
 
 void main() {
