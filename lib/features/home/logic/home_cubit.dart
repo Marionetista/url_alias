@@ -1,28 +1,40 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../common/models/url_alias_model.dart';
+import '../../../common/constants/messages.dart';
 import '../data/home_repository.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit({required HomeRepository repository})
     : _repository = repository,
-      super(HomeInitial());
+      super(const HomeInitial(aliases: []));
 
   final HomeRepository _repository;
-  final List<UrlAliasModel> _aliases = [];
-
-  List<UrlAliasModel> get aliases => List.unmodifiable(_aliases);
 
   Future<void> createAlias(String url) async {
-    emit(HomeLoading());
+    final existingAlias = state.aliases
+        .where((alias) => alias.self == url)
+        .firstOrNull;
+
+    if (existingAlias != null) {
+      emit(
+        HomeError(
+          aliases: state.aliases,
+          message: AppMessages.urlAlreadyShortened,
+        ),
+      );
+
+      return;
+    }
+
+    emit(HomeLoading(aliases: state.aliases));
 
     try {
       final alias = await _repository.createAlias(url);
-      _aliases.add(alias);
+      final newAliases = [...state.aliases, alias];
 
-      emit(HomeSuccess(aliases: _aliases));
+      emit(HomeSuccess(aliases: newAliases));
     } catch (e) {
-      emit(HomeError(message: e.toString()));
+      emit(HomeError(aliases: state.aliases, message: e.toString()));
     }
   }
 }

@@ -4,6 +4,9 @@ class AppMessages {
   static const String internetConnectionError = 'No internet connection';
   static const String httpError = 'HTTP error occurred';
   static String anErrorOccurred(String error) => 'An error occurred: $error';
+  static const String urlAlreadyShortened =
+      'This URL has already been shortened! Try another!';
+  static const String timeoutError = 'Request timeout - please try again';
 
   static const String close = 'Close';
   static const String writeYourFavoriteUrl = 'Write your favorite url!';

@@ -1,33 +1,32 @@
+import 'package:equatable/equatable.dart';
 import '../../../common/models/url_alias_model.dart';
 
-abstract class HomeState {
-  const HomeState();
-}
-
-class HomeInitial extends HomeState {}
-
-class HomeLoading extends HomeState {}
-
-class HomeSuccess extends HomeState {
-  const HomeSuccess({required this.aliases});
+sealed class HomeState extends Equatable {
+  const HomeState({required this.aliases});
 
   final List<UrlAliasModel> aliases;
+
+  @override
+  List<Object> get props => [aliases];
+}
+
+class HomeInitial extends HomeState {
+  const HomeInitial({required super.aliases});
+}
+
+class HomeLoading extends HomeState {
+  const HomeLoading({required super.aliases});
+}
+
+class HomeSuccess extends HomeState {
+  const HomeSuccess({required super.aliases});
 }
 
 class HomeError extends HomeState {
-  const HomeError({required this.message});
+  const HomeError({required super.aliases, required this.message});
 
   final String message;
-}
 
-class HomeUrlRetrieved extends HomeState {
-  const HomeUrlRetrieved({
-    required this.aliases,
-    required this.retrievedUrl,
-    required this.alias,
-  });
-
-  final List<UrlAliasModel> aliases;
-  final String retrievedUrl;
-  final String alias;
+  @override
+  List<Object> get props => [aliases, message];
 }

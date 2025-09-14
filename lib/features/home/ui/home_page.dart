@@ -7,9 +7,8 @@ import '../../../common/constants/messages.dart';
 import '../../../common/utils/app_utils.dart';
 import '../logic/home_cubit.dart';
 import '../logic/home_state.dart';
-import 'widgets/alias_list_item_widget.dart';
+import 'widgets/aliases_list_widget.dart';
 import 'widgets/app_bar_widget.dart';
-import 'widgets/empty_aliases_widget.dart';
 import 'widgets/error_snackbar_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,6 +30,7 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Form(
               key: _formKey,
@@ -62,24 +62,43 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: DesignTokens.sizeXXXL,
                     height: DesignTokens.sizeXXXL,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<HomeCubit>().createAlias(
-                            _urlController.text,
-                          );
-                          _urlController.clear();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            DesignTokens.sizeM,
+                    child: BlocBuilder<HomeCubit, HomeState>(
+                      builder: (context, state) {
+                        final isLoading = state is HomeLoading;
+
+                        return ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  if (_formKey.currentState!.validate()) {
+                                    context.read<HomeCubit>().createAlias(
+                                      _urlController.text,
+                                    );
+                                    _urlController.clear();
+                                  }
+                                },
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                DesignTokens.sizeM,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      child: Icon(Icons.send, size: DesignTokens.sizeXL),
+                          child: isLoading
+                              ? SizedBox(
+                                  width: DesignTokens.sizeL,
+                                  height: DesignTokens.sizeL,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                    ),
+                                  ),
+                                )
+                              : Icon(Icons.send, size: DesignTokens.sizeXL),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -90,17 +109,13 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(
                 vertical: DesignTokens.sizeXXL,
               ),
-              child: Row(
-                children: [
-                  Text(
-                    AppMessages.recentlyShortenedUrls,
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: DesignTokens.fontMD,
-                    ),
-                  ),
-                ],
+              child: Text(
+                AppMessages.recentlyShortenedUrls,
+                style: TextStyle(
+                  color: AppColors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: DesignTokens.fontMD,
+                ),
               ),
             ),
 
@@ -113,34 +128,14 @@ class _HomePageState extends State<HomePage> {
                 },
 
                 child: BlocBuilder<HomeCubit, HomeState>(
-                  builder: (context, state) {
-                    if (state is HomeLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (state is HomeSuccess || state is HomeUrlRetrieved) {
-                      final aliases = state is HomeSuccess
-                          ? state.aliases
-                          : (state as HomeUrlRetrieved).aliases;
-
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: aliases.isEmpty
-                                ? EmptyAliasesWidget()
-                                : ListView.builder(
-                                    itemCount: aliases.length,
-                                    itemBuilder: (context, index) {
-                                      final alias = aliases[index];
-                                      return AliasListItem(alias: alias);
-                                    },
-                                  ),
-                          ),
-                        ],
-                      );
-                    }
-
-                    return const EmptyAliasesWidget();
+                  builder: (context, state) => switch (state) {
+                    HomeSuccess() => AliasesListWidget(aliases: state.aliases),
+                    HomeError() => AliasesListWidget(aliases: state.aliases),
+                    HomeInitial() => AliasesListWidget(aliases: state.aliases),
+                    HomeLoading() => AliasesListWidget(
+                      aliases: state.aliases,
+                      isLoading: true,
+                    ),
                   },
                 ),
               ),

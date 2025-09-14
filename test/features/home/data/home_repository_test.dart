@@ -185,5 +185,34 @@ void main() {
       // Assert
       expect(repository, isA<HomeRepository>());
     });
+
+    test('When call createAlias with timeout '
+        'should throw timeout Exception', () async {
+      // Arrange
+      const url = 'https://www.example.com';
+
+      when(
+        () => mockHttpClient.post(
+          Uri.parse(aliasEndpoint),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'url': url}),
+        ),
+      ).thenAnswer((_) async {
+        await Future.delayed(const Duration(seconds: 8));
+        return http.Response(jsonEncode(responseBody), 201);
+      });
+
+      // Act & Assert
+      expect(
+        () => repository.createAlias(url),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Request timeout - please try again'),
+          ),
+        ),
+      );
+    }, timeout: const Timeout(Duration(seconds: 10)));
   });
 }
