@@ -46,13 +46,13 @@ You can learn more about Widget Testing here:
 
 ## Dependencies
 
-# flutter_bloc: ^9.1.1
+# flutter_bloc: ^10.0.0
     -Used to separate presentation from business logic. Following the BLoC pattern facilitates testability and reusability.
     - Dart Package: <https://pub.dev/packages/bloc>
     - GitHub: <https://github.com/felangel/bloc>
     - License: [MIT](https://github.com/felangel/bloc/blob/master/LICENSE)
 
-  # equatable: ^2.0.7
+  # equatable: ^2.0.8
     -Comparsion simplified.
     - Dart Package: <https://pub.dev/packages/equatable>
     - GitHub: <https://github.com/felangel/equatable>
@@ -70,7 +70,7 @@ You can learn more about Widget Testing here:
     - GitHub: <https://github.com/felangel/bloc/tree/master/packages/bloc_test>
     - License: [MIT](https://pub.dev/packages/bloc_test/license)
 
-  # http: ^1.5.0
+  # http: ^1.6.0
     -A composable, Future-based library for making HTTP requests.
     - Dart Package: <https://pub.dev/packages/http>
     - GitHub: <https://github.com/dart-lang/http/tree/master>
